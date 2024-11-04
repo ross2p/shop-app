@@ -5,6 +5,8 @@ import { Home } from "./component/Home/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./component/Auth/SignIn";
 import SignUp from "./component/Auth/SignUp";
+import ShoppingCart from "./component/ShoppingCart/ShoppingCart";
+import OrderList from "./component/OrderList/OrderList";
 
 import { AppRoutes } from "./utils/routes";
 import { Profile } from "./component/Profile/Profile";
@@ -20,6 +22,8 @@ function App() {
             <Route path={AppRoutes.SignIn} element={<SignIn />} />
             <Route path={AppRoutes.SignUp} element={<SignUp />} />
             <Route path={AppRoutes.Profile} element={<Profile />} />
+            <Route path={AppRoutes.ShoppingCart} element={<ShoppingCart />} />
+            <Route path={AppRoutes.OrderList} element={<OrderList />} />
           </Routes>
           {/* <Footer /> */}
         </ResponsiveAppBar>

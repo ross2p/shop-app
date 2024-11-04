@@ -6,6 +6,9 @@ export const API_URLS = {
   register: "/auth/register",
   userByUserId: (userId) => `/users/${userId}`,
   products: "/products",
+
+  order: "/orders",
+  order: (orderId) => `/orders/${orderId}`,
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
