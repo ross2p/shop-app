@@ -1,22 +1,21 @@
 import * as React from "react";
 import { Search } from "./Search";
 import { Container, CssBaseline, Paper, styled } from "@mui/material";
-import DeckCard from "./DeckCard";
+import ProductCard from "./ProductCard";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { fetchDecks } from "../../api/deckApi";
+import { featchProducts } from "../../api/productsApi";
 export function Home() {
   const [error, setError] = React.useState(null);
-  const [decks, setDecks] = React.useState([]);
+  const [products, setProducts] = React.useState([]);
 
   React.useEffect(() => {
     const loadDecks = async () => {
       try {
-        const data = await fetchDecks();
-        setDecks(data.content);
-        console.log(data.content);
+        const data = await featchProducts();
+        setProducts(data.content);
       } catch (err) {
-        setError("Failed to load decks");
+        setError("Failed to load products");
       }
     };
     loadDecks();
@@ -29,10 +28,11 @@ export function Home() {
           <Grid item xs={12} sm={8}>
             <Search />
           </Grid>
+
           <Grid item xs={0} sm={4}></Grid>
-          {decks.map((deck) => (
-            <Grid item key={deck.id} xs={12} sm={6} md={4} lg={3}>
-              <DeckCard deck={deck} />
+          {products?.map((product) => (
+            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+              <ProductCard product={product} />
             </Grid>
           ))}
         </Grid>

@@ -31,16 +31,6 @@ const SignIn = () => {
 
   const [error, setError] = React.useState(null);
 
-  React.useEffect(() => {
-    async function loadDate() {
-      const isSingIn = await fetchUser().then((response) => !!response);
-      if (isSingIn) {
-        navigate(AppRoutes.Home);
-      }
-    }
-    loadDate();
-  }, []);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -60,7 +50,9 @@ const SignIn = () => {
     fetchLogin(user)
       .then(() => {
         fetchUser()
-          .then((response) => {})
+          .then((response) => {
+            console.log(response);
+          })
           .then(() => {
             navigate("/");
           })

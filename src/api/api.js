@@ -4,16 +4,8 @@ import { useJwt } from "react-jwt";
 export const API_URLS = {
   login: "/auth/login",
   register: "/auth/register",
-
-  user: "/user",
-  userByUserId: (user_id) => `/user/${user_id}`,
-
-  decks: `/public/decks`,
-  deck: "/deck",
-  deckByUserId: (user_id) => `/user/${user_id}/deck`,
-  deckById: (deck_id) => `/deck/${deck_id}`,
-
-  cards: (deck_id) => `/deck/${deck_id}/cards`,
+  userByUserId: (userId) => `/users/${userId}`,
+  products: "/products",
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
@@ -35,6 +27,7 @@ export const apiRequest = async (url, method = "GET", body = null) => {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const result = await response.json();
+    console.log(result);
     return result;
   } catch (error) {
     console.error("API request failed:", {

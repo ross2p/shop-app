@@ -5,6 +5,7 @@ import { fetchUserByUserId } from "./userApi";
 export const fetchLogin = async (userData) => {
   apiRequest(API_URLS.login, "POST", userData)
     .then((response) => {
+      console.log(response);
       localStorage.setItem("token", response.token);
       return response.token;
     })
@@ -17,14 +18,11 @@ export const fetchRegister = async (userData) => {
 };
 
 export const fetchUser = async () => {
-  const user_id = localStorage.getItem("user_id");
-  if (!user_id) {
-    return null;
-  }
-  return fetchUserByUserId(user_id);
+  const userId = localStorage.getItem("user_id");
+  return fetchUserByUserId(userId);
 };
+
 export const fetchSignOut = async () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user_id");
-  return true;
 };
