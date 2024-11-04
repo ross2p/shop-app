@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container, CssBaseline } from "@mui/material";
+import ResponsiveAppBar from "./component/AppBar/AppBar";
+import { Home } from "./component/Home/Home";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignIn from "./component/Auth/SignIn";
+import SignUp from "./component/Auth/SignUp";
+
+import { AppRoutes } from "./utils/routes";
+import { Profile } from "./component/Profile/Profile";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <CssBaseline />
+        <ResponsiveAppBar>
+          <Routes>
+            <Route path={AppRoutes.Home} element={<Home />} />
+            <Route path={AppRoutes.SignIn} element={<SignIn />} />
+            <Route path={AppRoutes.SignUp} element={<SignUp />} />
+            <Route path={AppRoutes.Profile} element={<Profile />} />
+          </Routes>
+          {/* <Footer /> */}
+        </ResponsiveAppBar>
+      </Router>
+    </>
   );
 }
 
