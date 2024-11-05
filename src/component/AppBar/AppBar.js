@@ -12,8 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { a } from "@react-spring/web";
 import { fetchUser, fetchSignOut } from "../../api/authApi";
 import App from "../../App";
+import { featchCreateOrder } from "../../api/orderApi";
 
-const NAVIGATION = [
+let NAVIGATION = [
   {
     segment: AppRoutes.Home,
     title: "Home",
@@ -24,8 +25,17 @@ const NAVIGATION = [
     title: "About Us",
     icon: <DashboardIcon />,
   },
+  {
+    segment: AppRoutes.OrderList,
+    title: "History",
+    icon: <DashboardIcon />,
+  },
+  {
+    segment: `order-items`,
+    title: "Cart",
+    icon: <DashboardIcon />,
+  },
 ];
-
 const demoTheme = createTheme({
   cssVariables: {
     colorSchemeSelector: "data-toolpad-color-scheme",
@@ -63,6 +73,24 @@ DemoPageContent.propTypes = {
 };
 
 function ResponsiveAppBar({ children }) {
+  const [navigation, setNavigation] = React.useState(NAVIGATION);
+
+  React.useEffect(() => {
+    async function updateNavigation() {
+      try {
+        const data = await featchCreateOrder();
+        console.log(data);
+        const cart = navigation.find((item) => item.title === `Cart`);
+        cart.segment = `order-items/${data.id}`;
+        setNavigation((prev) => [...prev]);
+      } catch (error) {
+        console.error("Failed to fetch segment value", error);
+      }
+    }
+
+    updateNavigation();
+  }, []);
+
   const [session, setSession] = React.useState({
     id: 0,
     name: "",
@@ -133,7 +161,7 @@ function ResponsiveAppBar({ children }) {
     <AppProvider
       session={session}
       authentication={authentication}
-      navigation={NAVIGATION}
+      navigation={navigation}
       router={router}
       theme={demoTheme}
       branding={{

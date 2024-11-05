@@ -41,7 +41,7 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
       </Grid> */}
       <Grid item xs={12} sm={4} md={3}>
         <ButtonBase sx={{ width: 128, height: 128 }}>
-          <Img alt={item.name} src={item.image} />
+          <Img alt={item.product.name} src={item.product.image} />
         </ButtonBase>
       </Grid>
       <Grid
@@ -56,10 +56,10 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
       >
         <Grid item>
           <Typography gutterBottom variant="subtitle1" component="div">
-            {item.name}
+            {item.product.name}
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            {item.description}
+            {item.product.description}
           </Typography>
         </Grid>
         <Grid item direction="column" xs={4}>
@@ -96,41 +96,14 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
 export default function ShoppingCart() {
   const { id: orderId } = useParams();
   console.log(orderId);
-  const [cartItems, setCartItems] = React.useState([
-    {
-      id: 1,
-      name: "Product 1",
-      description: "Description of Product 1",
-      price: 19.99,
-      quantity: 1,
-      image: "/static/images/product1.jpg",
-      selected: true,
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      description: "Description of Product 2",
-      price: 29.99,
-      quantity: 2,
-      image: "/static/images/product2.jpg",
-      selected: true,
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      description: "Description of Product 3",
-      price: 39.99,
-      quantity: 1,
-      image: "/static/images/product3.jpg",
-      selected: true,
-    },
-  ]);
+  const [cartItems, setCartItems] = React.useState([]);
 
   React.useEffect(() => {
     async function loadDate() {
       try {
         const orders = await fetchOrderItems(orderId);
-        setCartItems(orders.orderItems);
+        console.log("orders", orders);
+        setCartItems(orders.content);
       } catch (error) {
         console.error("Failed to load user data", error);
       }

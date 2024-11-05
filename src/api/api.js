@@ -9,7 +9,7 @@ export const API_URLS = {
   addProduct: "/orderItems/addProduct",
 
   order: "/orders",
-  order: (orderId) => `/orders/${orderId}`,
+  orderItemsByOrderId: (orderId) => `/order/${orderId}/orderItems`,
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
