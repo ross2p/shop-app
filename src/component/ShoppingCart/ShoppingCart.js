@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import { fetchOrderItems } from "../../api/orderApi";
 import { useParams } from "react-router-dom";
+import { fetchUpdateOrderItem, fetchDeleteOrderItem } from "../../api/orderApi";
 
 const Img = styled("img")({
   margin: "auto",
@@ -111,30 +112,39 @@ export default function ShoppingCart() {
     loadDate();
   }, [orderId]);
 
-  const handleRemove = (id) => {
+  const handleRemove = async (id) => {
+    await fetchDeleteOrderItem(id);
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const handleAdd = (id) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+    handlequantity(id, (quantity) => quantity + 1);
   };
 
-  const handleSubtract = (id) => {
-    setCartItems(
-      (prevItems) =>
-        prevItems
-          .map((item) =>
-            item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-          )
-          .filter((item) => item.quantity > 0) // Automatically remove items with 0 quantity
+  const handleSubtract = async (id) => {
+    handleSubtract(id, (quantity) => quantity - 1);
+  };
+
+  const handlequantity = async (id, operator) => {
+    let updatedItem;
+    setCartItems((prevItems) =>
+      prevItems
+        .map((item) => {
+          if (item.id === id) {
+            updatedItem = { ...item, quantity: operator(item.quantity) };
+            return updatedItem;
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0)
     );
+    if (updatedItem) {
+      await fetchUpdateOrderItem(id, updatedItem);
+    }
   };
 
   const handleToggleSelect = (id) => {
+    console.log("id", id);
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item

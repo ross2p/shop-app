@@ -10,6 +10,8 @@ export const API_URLS = {
 
   order: "/orders",
   orderItemsByOrderId: (orderId) => `/order/${orderId}/orderItems`,
+
+  orderItemsById: (orderItemId) => `/orderItems/${orderItemId}`,
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
@@ -30,6 +32,7 @@ export const apiRequest = async (url, method = "GET", body = null) => {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
+    console.log(API_BASE_URL + url);
     const result = await response.json();
     console.log(result);
     return result;

@@ -16,3 +16,11 @@ export const fetchAddProduct = async (productId, quantity) => {
 export const featchCreateOrder = async () => {
   return apiRequest(API_URLS.order, "POST");
 };
+
+export const fetchUpdateOrderItem = async (orderItemId, data) => {
+  return apiRequest(API_URLS.orderItemsById(orderItemId), "PUT", data);
+};
+
+export const fetchDeleteOrderItem = async (orderItemId) => {
+  return apiRequest(API_URLS.orderItemsById(orderItemId), "DELETE");
+};

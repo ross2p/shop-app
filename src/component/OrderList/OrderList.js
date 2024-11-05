@@ -57,7 +57,7 @@ const OrderList = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={4} textAlign="right">
-                <Button variant="outlined" href={`/orders/${order.id}`}>
+                <Button variant="outlined" href={`/order-items/${order.id}`}>
                   View Details
                 </Button>
               </Grid>

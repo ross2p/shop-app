@@ -17,7 +17,10 @@ export default function ProductCard({ product }) {
   return (
     <Card sx={{ maxWidth: 345, mx: "auto", mt: 4, boxShadow: 3 }}>
       <CardMedia
-        sx={{ height: 240 }}
+        sx={{
+          height: 240,
+          backgroundSize: "contain",
+        }}
         image={
           product.image ??
           "https://img.freepik.com/free-photo/neutral-abstract-texture-minimal-background_53876-98402.jpg"
