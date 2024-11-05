@@ -8,8 +8,12 @@ import Typography from "@mui/material/Typography";
 import { Box, IconButton } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { Star, StarBorder } from "@mui/icons-material";
+import { fetchAddProduct } from "../../api/orderApi";
 
 export default function ProductCard({ product }) {
+  async function handleAddToCart(productId) {
+    await fetchAddProduct(productId, 1);
+  }
   return (
     <Card sx={{ maxWidth: 345, mx: "auto", mt: 4, boxShadow: 3 }}>
       <CardMedia
@@ -66,7 +70,9 @@ export default function ProductCard({ product }) {
             color="primary"
             sx={{ textTransform: "none" }}
             component={RouterLink}
-            to={`/cart/add/${product.id}`}
+            onClick={() => {
+              handleAddToCart(product.id);
+            }}
           >
             Add to cart
           </Button>

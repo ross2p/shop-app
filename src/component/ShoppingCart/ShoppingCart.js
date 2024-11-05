@@ -32,13 +32,13 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
     }}
   >
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={12} sm={1}>
+      {/* <Grid item xs={12} sm={1}>
         <Checkbox
           checked={item.selected}
           onChange={() => onToggleSelect(item.id)}
           inputProps={{ "aria-label": "select item" }}
         />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12} sm={4} md={3}>
         <ButtonBase sx={{ width: 128, height: 128 }}>
           <Img alt={item.name} src={item.image} />

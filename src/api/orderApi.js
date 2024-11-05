@@ -8,3 +8,7 @@ export const fetchOrderItems = async (orderId) => {
 export const fetchOrders = async () => {
   return apiRequest(API_URLS.order);
 };
+
+export const fetchAddProduct = async (productId, quantity) => {
+  return apiRequest(API_URLS.addProduct, "POST", { productId, quantity });
+};

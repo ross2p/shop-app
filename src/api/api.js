@@ -6,6 +6,7 @@ export const API_URLS = {
   register: "/auth/register",
   userByUserId: (userId) => `/users/${userId}`,
   products: "/products",
+  addProduct: "/orderItems/addProduct",
 
   order: "/orders",
   order: (orderId) => `/orders/${orderId}`,
