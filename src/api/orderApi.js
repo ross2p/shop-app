@@ -24,3 +24,7 @@ export const fetchUpdateOrderItem = async (orderItemId, data) => {
 export const fetchDeleteOrderItem = async (orderItemId) => {
   return apiRequest(API_URLS.orderItemsById(orderItemId), "DELETE");
 };
+
+export const fetchOrderById = async (orderId) => {
+  return apiRequest(API_URLS.orderById(orderId));
+};

@@ -7,6 +7,8 @@ import SignIn from "./component/Auth/SignIn";
 import SignUp from "./component/Auth/SignUp";
 import ShoppingCart from "./component/ShoppingCart/ShoppingCart";
 import OrderList from "./component/OrderList/OrderList";
+import OrderTracking from "./component/OrderTracking/OrderTracking";
+import ProductPage from "./component/ProductPage/ProductPage";
 
 import { AppRoutes } from "./utils/routes";
 import { Profile } from "./component/Profile/Profile";
@@ -24,6 +26,8 @@ function App() {
             <Route path={AppRoutes.Profile} element={<Profile />} />
             <Route path={AppRoutes.ShoppingCart} element={<ShoppingCart />} />
             <Route path={AppRoutes.OrderList} element={<OrderList />} />
+            <Route path="/order-trecking/:id" element={<OrderTracking />} />
+            <Route path="/product/:id" element={<ProductPage />} />
           </Routes>
           {/* <Footer /> */}
         </ResponsiveAppBar>

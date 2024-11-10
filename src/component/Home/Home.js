@@ -31,7 +31,7 @@ export function Home() {
 
           <Grid item xs={0} sm={4}></Grid>
           {products?.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+            <Grid item key={product.id} xs={12} sm={12} md={4} lg={3}>
               <ProductCard product={product} />
             </Grid>
           ))}

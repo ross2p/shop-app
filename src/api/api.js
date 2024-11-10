@@ -7,10 +7,11 @@ export const API_URLS = {
   userByUserId: (userId) => `/users/${userId}`,
   products: "/products",
   addProduct: "/orderItems/addProduct",
+  productById: (productId) => `/products/${productId}`,
 
   order: "/orders",
   orderItemsByOrderId: (orderId) => `/order/${orderId}/orderItems`,
-
+  orderById: (orderId) => `/orders/${orderId}`,
   orderItemsById: (orderItemId) => `/orderItems/${orderItemId}`,
 };
 

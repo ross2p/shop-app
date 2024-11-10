@@ -22,14 +22,14 @@ export default function ProductCard({ product }) {
           backgroundSize: "contain",
         }}
         image={
-          product.image ??
+          product.image[0] ??
           "https://img.freepik.com/free-photo/neutral-abstract-texture-minimal-background_53876-98402.jpg"
         }
         title={product.name}
       />
       <CardContent>
         <RouterLink
-          to={`/deck/${product.id}`}
+          to={`/product/${product.id}`}
           style={{ textDecoration: "none", color: "inherit" }}
         >
           <Typography gutterBottom variant="h5" component="div">
@@ -50,9 +50,6 @@ export default function ProductCard({ product }) {
             {product.rating}.0
           </Typography>
         </Box>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {product.description}
-        </Typography>
       </CardContent>
       <CardActions>
         <Box
