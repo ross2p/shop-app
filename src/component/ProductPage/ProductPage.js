@@ -22,7 +22,9 @@ import {
 import Carousel from "react-material-ui-carousel";
 import PersonIcon from "@mui/icons-material/Person";
 import { fetchAddProduct } from "../../api/orderApi";
-import { fetchProductById } from "../../api/productsApi";
+import { fetchProductById, fetchUpdateProduct } from "../../api/productsApi";
+import { fetchAddComment } from "../../api/commentsApi";
+import { fetchComments } from "../../api/commentsApi";
 import { useParams } from "react-router-dom";
 
 function ProductPage() {
@@ -45,69 +47,78 @@ function ProductPage() {
     },
     comments: [
       {
-        id: 1,
-        user: "User1",
-        text: "Це чудовий напій!",
-        avatar: null,
-        replies: [
-          {
-            id: 2,
-            user: "User2",
-            text: "Цілком згоден!",
-            avatar: null,
-            replies: [],
+        id: "de2eadd8-22a3-4a9c-9639-28110ceaa77d",
+        text: "Second comment",
+        user: {
+          id: "76fffd7c-9c3a-4cab-9bea-ab82b0fd6504",
+          firstName: "User",
+          lastName: "User",
+          email: "user@user.com",
+          birthDate: "2005-06-22",
+          role: {
+            id: "a01593ee-052b-44dd-99b2-5cf72a017dbe",
+            name: "USER",
+            description: "",
+            createdAt: "2024-11-10T18:19:55.213+00:00",
+            updatedAt: "2024-11-10T18:19:55.213+00:00",
+            deletedAt: null,
           },
-        ],
+          createdAt: "2024-11-10T18:19:55.213+00:00",
+          updatedAt: "2024-11-10T18:19:55.213+00:00",
+          deletedAt: null,
+        },
+        createdAt: "2024-11-10T18:29:06.774+00:00",
+        updatedAt: "2024-11-10T18:29:06.774+00:00",
+        deletedAt: null,
+        children: [],
       },
     ],
   };
 
-  const { id: orderId } = useParams();
-  console.log("orderId", orderId);
+  const { id: productId } = useParams();
+  // console.log("productId", productId);
 
   const [productData, setProductData] = useState(product);
 
   const [rating, setRating] = useState(0.0);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([{}]);
   const [newComment, setNewComment] = useState("");
   const [replyTo, setReplyTo] = useState(null);
 
   React.useEffect(() => {
     const loadProduct = async () => {
       try {
-        const data = await fetchProductById(orderId);
+        const [data, comments] = await Promise.all([
+          fetchProductById(productId),
+          fetchComments(productId),
+        ]);
+
         console.log(data);
         setProductData(data);
         setRating(data.rating);
-        setComments(data.comments);
+        setComments(comments.content);
+        console.log("comments2", comments);
       } catch (err) {
         console.error("Failed to load product");
       }
     };
-    console.log("orderId", orderId);
+    console.log("productId1sss", productId);
     loadProduct();
-  }, [orderId]);
+  }, [productId]);
 
-  const handleAddComment = (parentCommentId = null) => {
+  const handleAddComment = async (parentCommentId = null) => {
     if (newComment.trim()) {
       const newCommentObj = {
-        id: Date.now(),
-        user: "Anonymous", // Replace with actual user data
         text: newComment.trim(),
-        avatar: null,
-        replies: [],
+        parentId: parentCommentId,
+        productId: productData.id,
       };
+      console.log("newCommentObj", newCommentObj);
+      await fetchAddComment(newCommentObj);
 
-      if (parentCommentId) {
-        const updatedComments = addReply(
-          comments,
-          parentCommentId,
-          newCommentObj
-        );
-        setComments(updatedComments);
-      } else {
-        setComments([newCommentObj, ...comments]);
-      }
+      const allComments = await fetchComments(productData.id);
+
+      setComments(allComments.content);
 
       setNewComment("");
       setReplyTo(null);
@@ -137,15 +148,21 @@ function ProductPage() {
   const handleReplyClick = (comment) => {
     setReplyTo(comment);
   };
+  const handleSetRating = async (value) => {
+    console.log("value", value);
+    const product = await fetchUpdateProduct(productData.id, { rating: value });
+    setRating(product.rating);
+  };
 
   const renderComments = (comments, parentId = null) => {
+    console.log("render comment", comments);
     return comments?.map((comment) => (
       <Box
         key={comment.id}
         sx={{
           marginBottom: 2,
           padding: 2,
-          borderBottom: "1px solid #ddd",
+          borderBottom: parentId ? "none" : "1px solid #ddd",
           marginLeft: parentId ? 4 : 0,
         }}
       >
@@ -159,7 +176,9 @@ function ProductPage() {
           </Avatar>
           <Box>
             <Typography variant="body2">
-              <strong>{comment.user}</strong>
+              <strong>
+                {comment?.user?.firstName} {comment?.user?.lastName}
+              </strong>
             </Typography>
             <Typography variant="body1">{comment.text}</Typography>
             <Button
@@ -171,7 +190,9 @@ function ProductPage() {
             </Button>
           </Box>
         </Box>
-        {renderComments(comment.replies, comment.id)}
+        {comment.children &&
+          comment.children.length > 0 &&
+          renderComments(comment.children, comment.id)}
       </Box>
     ));
   };
@@ -206,9 +227,6 @@ function ProductPage() {
           <Box sx={{ flex: 1 }}>
             <CardContent>
               <Typography variant="h4">{productData.name}</Typography>
-              {/* <Typography variant="body1" color="textSecondary" paragraph>
-                {productData.description}
-              </Typography> */}
               <Typography variant="h5" color="primary" paragraph>
                 ₴{productData.price?.toFixed(2)}
               </Typography>
@@ -217,7 +235,7 @@ function ProductPage() {
               >
                 <Rating
                   value={rating}
-                  onChange={(event, newValue) => setRating(newValue)}
+                  onChange={(event, newValue) => handleSetRating(newValue)}
                 />
                 <Typography variant="body2" sx={{ marginLeft: 1 }}>
                   ({rating} зірок)
@@ -285,7 +303,7 @@ function ProductPage() {
             color="primary"
             onClick={() => handleAddComment(replyTo?.id)}
           >
-            Надіслати
+            Send
           </Button>
         </Box>
         {renderComments(comments)}

@@ -13,6 +13,9 @@ export const API_URLS = {
   orderItemsByOrderId: (orderId) => `/order/${orderId}/orderItems`,
   orderById: (orderId) => `/orders/${orderId}`,
   orderItemsById: (orderItemId) => `/orderItems/${orderItemId}`,
+
+  comments: (productId) => `/product/${productId}/comment`,
+  addComment: "/comment",
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
@@ -28,6 +31,7 @@ export const apiRequest = async (url, method = "GET", body = null) => {
   if (body) {
     options.body = JSON.stringify(body);
   }
+  console.log(body);
   try {
     const response = await fetch(API_BASE_URL + url, options);
     if (!response.ok) {

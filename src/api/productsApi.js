@@ -9,3 +9,7 @@ export const fetchProductById = async (productId) => {
   console.log(API_URLS.productById(productId));
   return apiRequest(API_URLS.productById(productId));
 };
+
+export const fetchUpdateProduct = async (productId, data) => {
+  return apiRequest(API_URLS.productById(productId), "PUT", data);
+};
