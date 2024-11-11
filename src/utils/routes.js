@@ -5,6 +5,6 @@ export const AppRoutes = {
   Deck: "deck/:id",
   EditDeck: `deck/edit/:id`,
   Profile: "profile",
-  ShoppingCart: "order-items/:id",
+  ShoppingCart: "order-items",
   OrderList: "order-list",
 };

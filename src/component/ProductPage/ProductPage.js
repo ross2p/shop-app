@@ -214,11 +214,11 @@ function ProductPage() {
         >
           <Box sx={{ flex: 1 }}>
             <Carousel>
-              {productData.image?.map((img, index) => (
+              {productData.images?.map((img, index) => (
                 <CardMedia
                   component="img"
                   height="300"
-                  image={img}
+                  image={`data:image/jpeg;base64,${img}`}
                   alt={productData.name}
                   key={index}
                   sx={{

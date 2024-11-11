@@ -152,7 +152,7 @@ export function OrderTracking() {
           </Button>
           {/* Destination information */}
           <Divider sx={{ my: 2 }} />
-          <Typography variant="h6">Адреса доставки</Typography>
+          <Typography variant="h6">Order Address</Typography>
           {order.address ? (
             <TableContainer
               component={Paper}
@@ -229,7 +229,11 @@ export function OrderTracking() {
                     <TableRow key={item.id}>
                       <TableCell sx={{ width: { xs: "50px", md: "100px" } }}>
                         <Avatar
-                          src={item.product.image[0]}
+                          src={
+                            item.product?.images?.[0]
+                              ? `data:image/jpeg;base64,${item.product.images[0]}`
+                              : ""
+                          }
                           variant="rounded"
                           sx={{ width: 56, height: 56 }}
                         />
@@ -237,9 +241,6 @@ export function OrderTracking() {
                       <TableCell>
                         <Typography variant="body1">
                           <strong>{item.product.name}</strong>
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {item.product.description}
                         </Typography>
                         <Typography variant="body2">
                           <strong>Quantity:</strong> {item.quantity}

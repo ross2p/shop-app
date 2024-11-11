@@ -39,7 +39,14 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={12} sm={4} md={3}>
         <ButtonBase sx={{ width: 128, height: 128 }}>
-          <Img alt={item.product.name} src={item.product.image} />
+          <Img
+            alt={item.product.name}
+            src={
+              item.product?.images?.[0]
+                ? `data:image/jpeg;base64,${item.product.images[0]}`
+                : ""
+            }
+          />
         </ButtonBase>
       </Grid>
       <Grid

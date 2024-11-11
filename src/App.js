@@ -9,6 +9,7 @@ import ShoppingCart from "./component/ShoppingCart/ShoppingCart";
 import OrderList from "./component/OrderList/OrderList";
 import OrderTracking from "./component/OrderTracking/OrderTracking";
 import ProductPage from "./component/ProductPage/ProductPage";
+import ProductCreate from "./component/ProductCreate/ProductCreate";
 
 import { AppRoutes } from "./utils/routes";
 import Profile from "./component/Profile/Profile";
@@ -32,6 +33,7 @@ function App() {
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/product-edit/:id" element={<ProductEdit />} />
             <Route path="/order" element={<Orders />} />
+            <Route path="/product-create" element={<ProductCreate />} />
           </Routes>
           {/* <Footer /> */}
         </ResponsiveAppBar>

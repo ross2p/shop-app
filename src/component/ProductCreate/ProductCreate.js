@@ -11,8 +11,6 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
-  Avatar,
-  IconButton,
   Table,
   TableHead,
   TableBody,
@@ -25,23 +23,22 @@ import ImageIcon from "@mui/icons-material/Image";
 import { fetchUpdateProduct } from "../../api/productsApi";
 import { useParams } from "react-router-dom";
 import { fetchProductById } from "../../api/productsApi";
+import { fetchProductCreate } from "../../api/productsApi";
 
 const initialCategories = [
   { id: "70536671-390a-4610-a305-b215da6f9530", name: "Продукти" },
   { id: "12345678-90ab-cdef-1234-567890abcdef", name: "Напої" },
 ];
 
-const ProductEdit = () => {
+const ProductCreate = () => {
   const [product, setProduct] = useState({
-    name: "Coca-Cola",
+    name: "Coca-Cola1111",
     description:
-      "The Coca-Cola drink is a magic of taste, a unique recipe and a unique bottle shape that cannot be confused with another.",
+      "The Coca-Cola drink is a magic of taste, a unique recipe and a unique bottle shape that cannot be confused with another. ",
     barcode: "123454712",
     price: 20.0,
+    rating: 4.0,
     categoryId: "70536671-390a-4610-a305-b215da6f9530",
-    image: [
-      "https://image.maudau.com.ua/webp/size/lg/products/54/8a/a9/548aa9f4-e5be-41c9-916d-8a249e84762b.jpg",
-    ],
     characteristic: {
       Brand: "Coca-Cola",
       Country: "Ukraine",
@@ -49,68 +46,20 @@ const ProductEdit = () => {
       Weight: "1 kg",
     },
   });
-
-  const { id: productId } = useParams();
-
   const [categories, setCategories] = useState(initialCategories);
   const [characteristic, setCharacteristic] = useState([
-    { key: "Brand", value: "Coca-Cola", error: "The key is duplicated" },
-    { key: "Country", value: "Ukraine", error: "" },
-    { key: "View", value: "Strong carbonated", error: "" },
-    { key: "Weight", value: "1 kg", error: "" },
     { key: "", value: "", error: "" },
   ]);
+  const [imageFile, setImageFile] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
-
-  const loadData = async () => {
-    try {
-      const data = await fetchProductById(productId);
-      setProduct(data);
-    } catch (err) {
-      console.error("Failed to load product");
-    }
-  };
-  React.useEffect(() => {
-    loadData();
-  }, [productId]);
-
-  React.useEffect(() => {
-    const map = Object.entries(product.characteristic).map(([key, value]) => ({
-      key,
-      value,
-      error: "",
-    }));
-    setCharacteristic(map);
-  }, [product]);
 
   const handleChange = (field, value) => {
     setProduct((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCharacteristicChange = (key, value, index) => {
-    let characteristicCopy = [...characteristic];
-    if (key === "" && value === "") {
-      characteristicCopy.splice(index, 1);
-      setCharacteristic([...characteristicCopy]);
-    }
-
-    if (index === characteristic.length - 1) {
-      console.log("length", characteristic.length - 1);
-      characteristicCopy.push({ key: "", value: "" });
-      setCharacteristic([...characteristicCopy]);
-    }
-
-    characteristicCopy[index] = { key, value };
-    setCharacteristic(characteristicCopy);
-
-    console.log("characteristic", characteristic);
-    characteristicCopy = validateCharacteristic(characteristicCopy);
-
-    // setProduct((prev) => ({
-    //   ...prev,
-    //   characteristic: { ...characteristicCopy },
-    // }));
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
 
   const handleSave = async () => {
@@ -121,29 +70,41 @@ const ProductEdit = () => {
     characteristicCopy.forEach((item) => {
       characteristicMap[item.key] = item.value;
     });
-    const productCopy = { ...product, characteristic: characteristicMap };
-    console.log("productCopy", productCopy);
-    await fetchUpdateProduct(productId, productCopy);
-    console.log("productCopy success", productCopy);
-  };
-  const validateCharacteristic = (characteristic) => {
-    for (let i = 0; i < characteristic.length - 1; i++) {
-      for (let j = 0; j < characteristic.length - 1; j++) {
-        if (i !== j && characteristic[i].key === characteristic[j].key) {
-          console.log("characteristic[i].key", characteristic[i].key);
-          characteristic[i].error = "The key is duplicated";
-          characteristic[j].error = "The key is duplicated";
-        }
-      }
-      if (characteristic.key === "" || characteristic.value === "") {
-        characteristic[i].error = "The field cannot be empty";
-      } else {
-        characteristic[i].error = "";
-      }
-      console.log("characteristic.error", characteristic[i].error);
-    }
+    let productCopy = { ...product, characteristic: characteristicMap };
 
-    // return characteristic;
+    // Create a FormData object to handle the file upload
+    const formData = new FormData();
+
+    productCopy = {
+      name: "Coca-Cola1111",
+      description:
+        "The Coca-Cola drink is a magic of taste, a unique recipe and a unique bottle shape that cannot be confused with another. ",
+      barcode: "123454712",
+      price: 20.0,
+      rating: 4.0,
+      categoryid: "70536671-390a-4610-a305-b215da6f9530",
+      characteristic: {
+        Brand: "Coca-Cola",
+        Country: "Ukraine",
+        View: "Strong carbonated",
+        Weight: "1 kg",
+      },
+    };
+    formData.append("name", productCopy.name);
+    formData.append("description", productCopy.description);
+    formData.append("barcode", productCopy.barcode);
+    formData.append("price", productCopy.price);
+    formData.append("rating", productCopy.rating);
+    formData.append("categoryId", productCopy.categoryid);
+    // formData.append("characteristic", productCopy.characteristic);
+    if (imageFile) {
+      formData.append("images", imageFile); // Attach the image file
+    }
+    console.log("formData", formData);
+
+    // Replace fetchUpdateProduct with your API function to send formData
+    await fetchProductCreate(formData);
+    console.log("Product saved successfully with image!");
   };
 
   const handleNewCategoryDialog = () => {
@@ -161,13 +122,6 @@ const ProductEdit = () => {
     setNewCategoryName("");
   };
 
-  const handleAddNewCharacteristicRow = () => {
-    setProduct((prev) => ({
-      ...prev,
-      characteristic: { ...prev.characteristic, "": "" },
-    }));
-  };
-
   return (
     <Paper
       sx={{
@@ -180,32 +134,8 @@ const ProductEdit = () => {
       }}
     >
       <Typography variant="h4" gutterBottom sx={{ textAlign: "center", mb: 3 }}>
-        Редагування продукту
+        Create new product
       </Typography>
-
-      <Box
-        elevation={2}
-        sx={{ padding: 2, mb: 4, display: "flex", alignItems: "center" }}
-      >
-        <Avatar
-          src={
-            product.images?.[0]
-              ? `data:image/jpeg;base64,${product.images[0]}`
-              : ""
-          }
-          alt="Product Image"
-          sx={{ width: 80, height: 80, marginRight: 2 }}
-        >
-          <ImageIcon />
-        </Avatar>
-        <TextField
-          label="URL зображення"
-          fullWidth
-          value={product.image[0]}
-          onChange={(e) => handleChange("image", [e.target.value])}
-          variant="outlined"
-        />
-      </Box>
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -270,56 +200,18 @@ const ProductEdit = () => {
           />
         </Grid>
 
+        {/* Image Upload Field */}
         <Grid item xs={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            Характеристики
-          </Typography>
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Ключ</TableCell>
-                <TableCell>Значення</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {characteristic.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <TextField
-                      fullWidth
-                      value={item.key}
-                      onChange={(e) =>
-                        handleCharacteristicChange(
-                          e.target.value,
-                          item.value,
-                          index
-                        )
-                      }
-                      variant="outlined"
-                      error={!!item.errors}
-                      helperText={item.errors}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      fullWidth
-                      value={item.value}
-                      onChange={(e) =>
-                        handleCharacteristicChange(
-                          item.key,
-                          e.target.value,
-                          index
-                        )
-                      }
-                      variant="outlined"
-                      error={!!item.errors}
-                      helperText={item.errors}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<ImageIcon />}
+            fullWidth
+          >
+            Завантажити фото
+            <input type="file" hidden onChange={handleFileChange} />
+          </Button>
+          {imageFile && <Typography>{imageFile.name}</Typography>}
         </Grid>
 
         <Grid item xs={12} sx={{ textAlign: "center" }}>
@@ -329,12 +221,11 @@ const ProductEdit = () => {
             onClick={handleSave}
             sx={{ mt: 2, px: 4, py: 1 }}
           >
-            Save
+            Зберегти
           </Button>
         </Grid>
       </Grid>
 
-      {/* Діалогове вікно для нової категорії */}
       <Dialog
         open={openNewCategoryDialog}
         onClose={() => setOpenNewCategoryDialog(false)}
@@ -366,4 +257,4 @@ const ProductEdit = () => {
   );
 };
 
-export default ProductEdit;
+export default ProductCreate;

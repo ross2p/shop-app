@@ -22,11 +22,13 @@ export default function ProductCard({ product }) {
           backgroundSize: "contain",
         }}
         image={
-          product.image[0] ??
-          "https://img.freepik.com/free-photo/neutral-abstract-texture-minimal-background_53876-98402.jpg"
+          product.images?.[0]
+            ? `data:image/jpeg;base64,${product.images[0]}`
+            : ""
         }
         title={product.name}
       />
+
       <CardContent>
         <RouterLink
           to={`/product/${product.id}`}
