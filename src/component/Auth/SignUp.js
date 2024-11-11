@@ -14,6 +14,8 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { SocialIcon } from "react-social-icons";
 import { fetchRegister } from "../../api/authApi";
+import { useNavigate } from "react-router-dom";
+
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from "./CustomIcons";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -36,7 +38,8 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: "100%",
+  // height: "100%",
+  // margin: 20,
   padding: 4,
   backgroundImage:
     "radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))",
@@ -48,6 +51,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [mode, setMode] = React.useState("light");
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -141,7 +145,7 @@ export default function SignUp() {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const dateOfBirth = new Date(
@@ -154,11 +158,11 @@ export default function SignUp() {
       lastName: data.get("lastName"),
       email: data.get("email"),
       password: data.get("password"),
-      birthdate: dateOfBirth,
+      birthdate: `${data.get("year")}-${data.get("month")}-${data.get("day")}`,
+      roleId: "a01593ee-052b-44dd-99b2-5cf72a017dbe",
     };
-    const newUser = fetchRegister(user);
-
-    console.log("New user", newUser);
+    const newUser = await fetchRegister(user);
+    navigate("/");
   };
 
   return (
@@ -166,7 +170,7 @@ export default function SignUp() {
       <Stack
         sx={{
           justifyContent: "center",
-          height: "115dvh",
+          // height: "115dvh",
           p: 2,
         }}
       >
@@ -314,7 +318,7 @@ export default function SignUp() {
               Already have an account?{" "}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href="/sign-in"
                   variant="body2"
                   sx={{ alignSelf: "center" }}
                 >

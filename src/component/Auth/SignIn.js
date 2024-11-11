@@ -192,7 +192,7 @@ const SignIn = () => {
             Don&apos;t have an account?{" "}
             <span>
               <Link
-                href="/sign-in"
+                href="/sign-up"
                 variant="body2"
                 sx={{ alignSelf: "center" }}
               >
