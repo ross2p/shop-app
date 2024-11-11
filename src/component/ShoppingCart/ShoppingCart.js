@@ -56,12 +56,12 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
         lg={3}
       >
         <Grid item>
-          <Typography gutterBottom variant="subtitle1" component="div">
+          <Typography gutterBottom variant="h5" component="div">
             {item.product.name}
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          {/* <Typography variant="body2" color="text.secondary" gutterBottom>
             {item.product.description}
-          </Typography>
+          </Typography> */}
         </Grid>
         <Grid item direction="column" xs={4}>
           <Box display="flex" alignItems="center">

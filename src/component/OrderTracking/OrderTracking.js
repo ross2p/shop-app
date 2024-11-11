@@ -9,6 +9,12 @@ import {
   CardContent,
   Divider,
   Avatar,
+  TableContainer,
+  Paper,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { fetchOrderById } from "../../api/orderApi";
@@ -33,6 +39,7 @@ export function OrderTracking() {
   const loadData = async () => {
     try {
       const data = await fetchOrderById(orderId);
+      console.log("data111", data);
       setOrder(data);
     } catch (err) {
       setError("Failed to load order");
@@ -46,7 +53,7 @@ export function OrderTracking() {
     "AWAITING_PAYMENT",
     "DELIVERY",
     "COMPLETED",
-    "CANCELED",
+    // "CANCELED",
   ];
   const activeStep = steps.indexOf(order.status);
 
@@ -97,11 +104,62 @@ export function OrderTracking() {
           {/* Destination information */}
           <Divider sx={{ my: 2 }} />
           <Typography variant="h6">Адреса доставки</Typography>
-          {order.user.addresses.length > 0 ? (
-            <Typography variant="body1">{order.user.addresses[0]}</Typography>
+          {order.address ? (
+            <TableContainer
+              component={Paper}
+              sx={{ boxShadow: "none" }}
+              md={{ width: "50%", boxShadow: "none" }}
+            >
+              <Table sx={{ borderCollapse: "collapse" }}>
+                <TableBody>
+                  <TableRow sx={{ border: "none" }}>
+                    <TableCell sx={{ border: "none" }}>
+                      <strong>Street</strong>
+                    </TableCell>
+                    <TableCell sx={{ border: "none" }}>
+                      {order.address.street}, {order.address.building}
+                    </TableCell>
+                  </TableRow>
+                  {order.address.apartment && (
+                    <TableRow sx={{ border: "none" }}>
+                      <TableCell sx={{ border: "none" }}>
+                        <strong>Apartment</strong>
+                      </TableCell>
+                      <TableCell sx={{ border: "none" }}>
+                        {order.address.apartment}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  <TableRow sx={{ border: "none" }}>
+                    <TableCell sx={{ border: "none" }}>
+                      <strong>City</strong>
+                    </TableCell>
+                    <TableCell sx={{ border: "none" }}>
+                      {order.address.city}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow sx={{ border: "none" }}>
+                    <TableCell sx={{ border: "none" }}>
+                      <strong>Postal Code</strong>
+                    </TableCell>
+                    <TableCell sx={{ border: "none" }}>
+                      {order.address.postcode}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow sx={{ border: "none" }}>
+                    <TableCell sx={{ border: "none" }}>
+                      <strong>Country</strong>
+                    </TableCell>
+                    <TableCell sx={{ border: "none" }}>
+                      {order.address.country}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
           ) : (
             <Typography variant="body1" color="textSecondary">
-              Адреса не вказана
+              Address not provided
             </Typography>
           )}
         </CardContent>
