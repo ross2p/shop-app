@@ -26,7 +26,7 @@ import { fetchProductById, fetchUpdateProduct } from "../../api/productsApi";
 import { fetchAddComment } from "../../api/commentsApi";
 import { fetchComments } from "../../api/commentsApi";
 import { fetchUser } from "../../api/authApi";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function ProductPage() {
   const product = {
@@ -77,6 +77,7 @@ function ProductPage() {
   };
 
   const { id: productId } = useParams();
+  const navigate = useNavigate();
   // console.log("productId", productId);
 
   const [productData, setProductData] = useState(product);
@@ -233,7 +234,7 @@ function ProductPage() {
               {isUserAdmin && (
                 <Button
                   variant="outlined"
-                  onClick={() => console.log("EDIT")}
+                  onClick={() => navigate(`/product-edit/${productData.id}`)}
                   sx={{
                     position: "absolute",
                     top: 8,

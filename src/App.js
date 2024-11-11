@@ -11,7 +11,8 @@ import OrderTracking from "./component/OrderTracking/OrderTracking";
 import ProductPage from "./component/ProductPage/ProductPage";
 
 import { AppRoutes } from "./utils/routes";
-import { Profile } from "./component/Profile/Profile";
+import Profile from "./component/Profile/Profile";
+import ProductEdit from "./component/ProductEdit/ProductEdit";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path={AppRoutes.OrderList} element={<OrderList />} />
             <Route path="/order-trecking/:id" element={<OrderTracking />} />
             <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/product-edit/:id" element={<ProductEdit />} />
           </Routes>
           {/* <Footer /> */}
         </ResponsiveAppBar>
