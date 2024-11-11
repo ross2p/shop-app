@@ -11,3 +11,7 @@ export const fetchUpdateUser = async (userId, data) => {
 export const fetchCreateAddress = async (data) => {
   return apiRequest(API_URLS.address, "POST", data);
 };
+
+export const fetchAddresses = async () => {
+  return apiRequest(API_URLS.address, "GET");
+};

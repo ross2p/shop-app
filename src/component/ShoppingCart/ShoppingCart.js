@@ -9,12 +9,23 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import { fetchOrderItems } from "../../api/orderApi";
-import { useParams } from "react-router-dom";
-import { fetchUpdateOrderItem, fetchDeleteOrderItem } from "../../api/orderApi";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  fetchOrderItems,
+  fetchUpdateOrder,
+  fetchUpdateOrderItem,
+  fetchDeleteOrderItem,
+} from "../../api/orderApi";
+import { fetchAddresses } from "../../api/userApi";
 
 const Img = styled("img")({
   margin: "auto",
@@ -24,22 +35,8 @@ const Img = styled("img")({
 });
 
 const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
-  <Paper
-    sx={{
-      p: 2,
-      margin: "auto",
-      flexGrow: 1,
-      mb: 2,
-    }}
-  >
+  <Paper sx={{ p: 2, margin: "auto", flexGrow: 1, mb: 2 }}>
     <Grid container spacing={2} alignItems="center">
-      {/* <Grid item xs={12} sm={1}>
-        <Checkbox
-          checked={item.selected}
-          onChange={() => onToggleSelect(item.id)}
-          inputProps={{ "aria-label": "select item" }}
-        />
-      </Grid> */}
       <Grid item xs={12} sm={4} md={3}>
         <ButtonBase sx={{ width: 128, height: 128 }}>
           <Img alt={item.product.name} src={item.product.image} />
@@ -59,9 +56,6 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
           <Typography gutterBottom variant="h5" component="div">
             {item.product.name}
           </Typography>
-          {/* <Typography variant="body2" color="text.secondary" gutterBottom>
-            {item.product.description}
-          </Typography> */}
         </Grid>
         <Grid item direction="column" xs={4}>
           <Box display="flex" alignItems="center">
@@ -96,20 +90,24 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
 
 export default function ShoppingCart() {
   const { id: orderId } = useParams();
-  console.log(orderId);
   const [cartItems, setCartItems] = React.useState([]);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [selectedAddress, setSelectedAddress] = React.useState(null);
+  const [addresses, setAddresses] = React.useState([]);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
-    async function loadDate() {
+    async function loadData() {
       try {
         const orders = await fetchOrderItems(orderId);
-        console.log("orders", orders);
         setCartItems(orders.content);
+        const fetchedAddresses = await fetchAddresses(); // Fetching addresses
+        setAddresses(fetchedAddresses.content); // Assumes `content` is the list of addresses
       } catch (error) {
-        console.error("Failed to load user data", error);
+        console.error("Failed to load order data", error);
       }
     }
-    loadDate();
+    loadData();
   }, [orderId]);
 
   const handleRemove = async (id) => {
@@ -118,14 +116,14 @@ export default function ShoppingCart() {
   };
 
   const handleAdd = (id) => {
-    handlequantity(id, (quantity) => quantity + 1);
+    handleQuantity(id, (quantity) => quantity + 1);
   };
 
   const handleSubtract = async (id) => {
-    handleSubtract(id, (quantity) => quantity - 1);
+    handleQuantity(id, (quantity) => quantity - 1);
   };
 
-  const handlequantity = async (id, operator) => {
+  const handleQuantity = async (id, operator) => {
     let updatedItem;
     setCartItems((prevItems) =>
       prevItems
@@ -144,12 +142,21 @@ export default function ShoppingCart() {
   };
 
   const handleToggleSelect = (id) => {
-    console.log("id", id);
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item
       )
     );
+  };
+
+  const handleChangeStatus = async () => {
+    if (selectedAddress) {
+      await fetchUpdateOrder(orderId, {
+        status: "DELIVERY",
+        addressId: selectedAddress,
+      });
+      navigate("/"); // Redirect to the home page after update
+    }
   };
 
   const totalPrice = cartItems
@@ -183,11 +190,54 @@ export default function ShoppingCart() {
           variant="contained"
           color="primary"
           size="large"
-          href="/checkout"
+          onClick={() => setOpenModal(true)}
         >
           Proceed to Checkout
         </Button>
       </Box>
+
+      {/* Address Selection Modal */}
+      <Dialog
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Select an Address</DialogTitle>
+        <DialogContent sx={{ padding: 4 }}>
+          <List>
+            {addresses.map((address) => (
+              <ListItem
+                button
+                key={address.id}
+                onClick={() => setSelectedAddress(address.id)}
+                selected={selectedAddress === address.id}
+                sx={{
+                  padding: 2,
+                  marginBottom: 2,
+                  borderRadius: 2,
+                  border:
+                    selectedAddress === address.id
+                      ? "2px solid #3f51b5"
+                      : "1px solid #ddd",
+                }}
+              >
+                <ListItemText
+                  primary={`${address.country}, ${address.city}, ${address.street} ${address.building}, Apt ${address.apartment}, ${address.postcode}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenModal(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleChangeStatus} color="primary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
