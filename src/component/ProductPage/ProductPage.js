@@ -25,6 +25,7 @@ import { fetchAddProduct } from "../../api/orderApi";
 import { fetchProductById, fetchUpdateProduct } from "../../api/productsApi";
 import { fetchAddComment } from "../../api/commentsApi";
 import { fetchComments } from "../../api/commentsApi";
+import { fetchUser } from "../../api/authApi";
 import { useParams } from "react-router-dom";
 
 function ProductPage() {
@@ -84,18 +85,21 @@ function ProductPage() {
   const [comments, setComments] = useState([{}]);
   const [newComment, setNewComment] = useState("");
   const [replyTo, setReplyTo] = useState(null);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
 
   React.useEffect(() => {
     const loadProduct = async () => {
       try {
-        const [data, comments] = await Promise.all([
+        const [data, comments, user] = await Promise.all([
           fetchProductById(productId),
           fetchComments(productId),
+          fetchUser(),
         ]);
 
         console.log(data);
         setProductData(data);
         setRating(data.rating);
+        setIsUserAdmin(user.role.name === "ADMIN");
         setComments(comments.content);
         console.log("comments2", comments);
       } catch (err) {
@@ -225,7 +229,21 @@ function ProductPage() {
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <CardContent>
+            <CardContent sx={{ position: "relative" }}>
+              {isUserAdmin && (
+                <Button
+                  variant="outlined"
+                  onClick={() => console.log("EDIT")}
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    zIndex: 1,
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
               <Typography variant="h4">{productData.name}</Typography>
               <Typography variant="h5" color="primary" paragraph>
                 ₴{productData.price?.toFixed(2)}
