@@ -19,7 +19,6 @@ export const fetchRegister = async (userData) => {
 };
 
 export const fetchUser = async () => {
-  console.log(2);
   const userId = localStorage.getItem("user_id");
   return fetchUserByUserId(userId);
 };

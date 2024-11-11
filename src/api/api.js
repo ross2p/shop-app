@@ -13,6 +13,7 @@ export const API_URLS = {
   orderItemsByOrderId: (orderId) => `/order/${orderId}/orderItems`,
   orderById: (orderId) => `/orders/${orderId}`,
   orderItemsById: (orderItemId) => `/orderItems/${orderItemId}`,
+  allOrders: "/orders/all",
 
   comments: (productId) => `/product/${productId}/comment`,
   addComment: "/comment",

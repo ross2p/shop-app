@@ -32,3 +32,7 @@ export const fetchOrderById = async (orderId) => {
 export const fetchUpdateOrder = async (orderId, data) => {
   return apiRequest(API_URLS.orderById(orderId), "PUT", data);
 };
+
+export const fetchAllOrders = async (orderId) => {
+  return apiRequest(API_URLS.allOrders);
+};

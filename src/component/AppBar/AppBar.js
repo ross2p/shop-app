@@ -22,9 +22,12 @@ let NAVIGATION = [
   },
   {
     segment: AppRoutes.Profile,
-    title: "About Us",
+    title: "Profile",
     icon: <DashboardIcon />,
   },
+];
+let NAVIGATION_USER = [
+  ...NAVIGATION,
   {
     segment: AppRoutes.OrderList,
     title: "History",
@@ -33,6 +36,15 @@ let NAVIGATION = [
   {
     segment: `order-items`,
     title: "Cart",
+    icon: <DashboardIcon />,
+  },
+];
+
+const NAVIGATION_ADMIN = [
+  ...NAVIGATION,
+  {
+    segment: `order`,
+    title: "Orers",
     icon: <DashboardIcon />,
   },
 ];
@@ -74,29 +86,27 @@ DemoPageContent.propTypes = {
 
 function ResponsiveAppBar({ children }) {
   const [navigation, setNavigation] = React.useState(NAVIGATION);
-
-  React.useEffect(() => {
-    async function updateNavigation() {
-      try {
-        const data = await featchCreateOrder();
-        console.log(data);
-        const cart = navigation.find((item) => item.title === `Cart`);
-        cart.segment = `order-items/${data.id}`;
-        setNavigation((prev) => [...prev]);
-      } catch (error) {
-        console.error("Failed to fetch segment value", error);
-      }
-    }
-
-    updateNavigation();
-  }, []);
-
   const [session, setSession] = React.useState({
     id: 0,
     name: "",
     email: "",
     image: "",
   });
+
+  React.useState(() => {
+    const loadDate = async () => {
+      const user = await fetchUser();
+      if (!user) {
+        return;
+      }
+      if (user.role.name == "ADMIN") {
+        setNavigation(NAVIGATION_ADMIN);
+      } else {
+        setNavigation(NAVIGATION_USER);
+      }
+    };
+    loadDate();
+  }, []);
 
   React.useEffect(() => {
     async function loadDate() {
