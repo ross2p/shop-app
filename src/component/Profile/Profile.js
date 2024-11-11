@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -15,105 +15,85 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
+import { fetchUser } from "../../api/authApi";
+import { fetchUpdateUser, fetchCreateAddress } from "../../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const initialUser = {
-    id: "9f3e06da-a890-4980-b4cc-d9e816f84c97",
-    firstName: "Admin",
-    lastName: "Admin",
-    email: "admin@admin.com",
-    birthDate: "2005-06-22",
-    role: {
-      id: "edf10bdf-a0ce-4f16-91d7-a9d3dd1f6d35",
-      name: "ADMIN",
-      description: "",
-      createdAt: "2024-11-10T18:19:55.213+00:00",
-      updatedAt: "2024-11-10T18:19:55.213+00:00",
-      deletedAt: null,
-    },
-    addresses: [
-      {
-        id: "9f36b011-199c-4f73-8eed-1498305454a7",
-        country: "Ukraine",
-        city: "Lviv",
-        street: "Shevchenka str",
-        building: "2a",
-        apartment: "54",
-        postcode: "89077",
-        createdAt: "2024-11-11T18:55:05.741+00:00",
-        updatedAt: "2024-11-11T18:55:05.741+00:00",
-        deletedAt: null,
-      },
-    ],
-    createdAt: "2024-11-10T18:19:55.213+00:00",
-    updatedAt: "2024-11-10T18:19:55.213+00:00",
-    deletedAt: null,
-    history: [
-      {
-        id: "7ef4b023-1477-4806-8fd4-70086ad07f75",
-        status: "PENDING",
-        orderDate: null,
-        totalAmount: 0.0,
-        createdAt: "2024-11-10T21:15:15.989+00:00",
-        updatedAt: "2024-11-10T21:15:15.989+00:00",
-        deletedAt: null,
-      },
-      {
-        id: "57c322ae-af6d-4790-b04b-4f84087da515",
-        status: "COMPLETED",
-        orderDate: null,
-        totalAmount: 0.0,
-        createdAt: "2024-11-10T18:19:55.213+00:00",
-        updatedAt: "2024-11-10T21:15:15.965+00:00",
-        deletedAt: null,
-      },
-    ],
-  };
+  const navigate = useNavigate();
 
-  const [user, setUser] = useState(initialUser);
-  const [newAddress, setNewAddress] = useState({
-    country: "",
-    city: "",
-    street: "",
-    building: "",
-    apartment: "",
-    postcode: "",
-  });
+  const [user, setUser] = useState(null);
+  const [newAddresses, setNewAddresses] = useState([]);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const fetchedUser = await fetchUser();
+        setUser(fetchedUser);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+    loadUser();
+  }, []);
 
   const handleChange = (field, value) => {
     setUser((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAddressChange = (index, field, value) => {
-    const updatedAddresses = [...user.addresses];
+  const handleAddressChange = (index, field, value, isNew) => {
+    const updatedAddresses = isNew ? [...newAddresses] : [...user.addresses];
     updatedAddresses[index][field] = value;
-    setUser((prev) => ({ ...prev, addresses: updatedAddresses }));
+    isNew
+      ? setNewAddresses(updatedAddresses)
+      : setUser((prev) => ({ ...prev, addresses: updatedAddresses }));
   };
 
-  const handleAddAddress = () => {
-    setUser((prev) => ({
+  const handleAddNewAddress = () => {
+    setNewAddresses((prev) => [
       ...prev,
-      addresses: [...prev.addresses, { ...newAddress }],
-    }));
-    setNewAddress({
-      country: "",
-      city: "",
-      street: "",
-      building: "",
-      apartment: "",
-      postcode: "",
-    });
+      {
+        country: "",
+        city: "",
+        street: "",
+        building: "",
+        apartment: "",
+        postcode: "",
+      },
+    ]);
   };
 
-  const handleRemoveAddress = (index) => {
-    const updatedAddresses = user.addresses.filter((_, i) => i !== index);
-    setUser((prev) => ({ ...prev, addresses: updatedAddresses }));
+  const handleRemoveAddress = (index, isNew) => {
+    const updatedAddresses = isNew
+      ? newAddresses.filter((_, i) => i !== index)
+      : user.addresses.filter((_, i) => i !== index);
+    isNew
+      ? setNewAddresses(updatedAddresses)
+      : setUser((prev) => ({ ...prev, addresses: updatedAddresses }));
   };
 
-  const handleSave = () => {
-    console.log("Updated User:", user);
-    alert("User information saved!");
+  const handleSave = async () => {
+    try {
+      await fetchUpdateUser(user.id, {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        birthDate: user.birthDate,
+      });
+
+      for (const address of newAddresses) {
+        await fetchCreateAddress({
+          ...address,
+          userId: user.id,
+        });
+      }
+      navigate("/");
+    } catch (error) {
+      console.error("Failed to save user or address:", error);
+    }
   };
+
+  if (!user) return <Typography>Loading...</Typography>;
 
   return (
     <Paper
@@ -176,98 +156,40 @@ const Profile = () => {
       <Divider sx={{ my: 3 }} />
 
       <Typography variant="h6" sx={{ mb: 2 }}>
-        Адреси
+        Існуючі Адреси
       </Typography>
 
       {user.addresses.map((address, index) => (
-        <Card key={index} sx={{ mb: 2 }}>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Країна"
-                  fullWidth
-                  value={address.country}
-                  onChange={(e) =>
-                    handleAddressChange(index, "country", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Місто"
-                  fullWidth
-                  value={address.city}
-                  onChange={(e) =>
-                    handleAddressChange(index, "city", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Вулиця"
-                  fullWidth
-                  value={address.street}
-                  onChange={(e) =>
-                    handleAddressChange(index, "street", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Будинок"
-                  fullWidth
-                  value={address.building}
-                  onChange={(e) =>
-                    handleAddressChange(index, "building", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Квартира"
-                  fullWidth
-                  value={address.apartment}
-                  onChange={(e) =>
-                    handleAddressChange(index, "apartment", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Поштовий індекс"
-                  fullWidth
-                  value={address.postcode}
-                  onChange={(e) =>
-                    handleAddressChange(index, "postcode", e.target.value)
-                  }
-                  variant="outlined"
-                />
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardActions>
-            <Button
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={() => handleRemoveAddress(index)}
-            >
-              Видалити
-            </Button>
-          </CardActions>
-        </Card>
+        <AddressForm
+          key={index}
+          address={address}
+          index={index}
+          isNew={false}
+          handleAddressChange={handleAddressChange}
+          handleRemoveAddress={handleRemoveAddress}
+        />
+      ))}
+
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Нові Адреси
+      </Typography>
+
+      {newAddresses.map((address, index) => (
+        <AddressForm
+          key={`new-${index}`}
+          address={address}
+          index={index}
+          isNew={true}
+          handleAddressChange={handleAddressChange}
+          handleRemoveAddress={handleRemoveAddress}
+        />
       ))}
 
       <Box sx={{ mt: 2 }}>
         <Button
           variant="outlined"
           startIcon={<AddCircleOutlineIcon />}
-          onClick={handleAddAddress}
+          onClick={handleAddNewAddress}
         >
           Додати нову адресу
         </Button>
@@ -286,6 +208,98 @@ const Profile = () => {
         </Button>
       </Box>
     </Paper>
+  );
+};
+
+const AddressForm = ({
+  address,
+  index,
+  isNew,
+  handleAddressChange,
+  handleRemoveAddress,
+}) => {
+  return (
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Країна"
+              fullWidth
+              value={address.country}
+              onChange={(e) =>
+                handleAddressChange(index, "country", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Місто"
+              fullWidth
+              value={address.city}
+              onChange={(e) =>
+                handleAddressChange(index, "city", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Вулиця"
+              fullWidth
+              value={address.street}
+              onChange={(e) =>
+                handleAddressChange(index, "street", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Будинок"
+              fullWidth
+              value={address.building}
+              onChange={(e) =>
+                handleAddressChange(index, "building", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Квартира"
+              fullWidth
+              value={address.apartment}
+              onChange={(e) =>
+                handleAddressChange(index, "apartment", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Поштовий індекс"
+              fullWidth
+              value={address.postcode}
+              onChange={(e) =>
+                handleAddressChange(index, "postcode", e.target.value, isNew)
+              }
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions>
+        <Button
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={() => handleRemoveAddress(index, isNew)}
+        >
+          Видалити
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 

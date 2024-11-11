@@ -47,24 +47,9 @@ const SignIn = () => {
       password: data.get("password"),
     };
 
-    fetchLogin(user)
-      .then(() => {
-        fetchUser()
-          .then((response) => {
-            console.log(response);
-          })
-          .then(() => {
-            navigate("/");
-          })
-          .catch((error) => {
-            console.log("error", error);
-            setError("Failed to load decks");
-          });
-      })
-      .catch((error) => {
-        console.log("error", error);
-        setError("Failed to login");
-      });
+    await fetchLogin(user);
+
+    navigate("/");
   };
 
   const validateInputs = () => {

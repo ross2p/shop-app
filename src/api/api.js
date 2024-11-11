@@ -16,6 +16,8 @@ export const API_URLS = {
 
   comments: (productId) => `/product/${productId}/comment`,
   addComment: "/comment",
+
+  address: "/addresses",
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {

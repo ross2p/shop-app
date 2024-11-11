@@ -3,6 +3,7 @@ import { decodeToken } from "react-jwt";
 import { fetchUserByUserId } from "./userApi";
 
 export const fetchLogin = async (userData) => {
+  console.log(1);
   apiRequest(API_URLS.login, "POST", userData)
     .then((response) => {
       console.log(response);
@@ -18,6 +19,7 @@ export const fetchRegister = async (userData) => {
 };
 
 export const fetchUser = async () => {
+  console.log(2);
   const userId = localStorage.getItem("user_id");
   return fetchUserByUserId(userId);
 };
