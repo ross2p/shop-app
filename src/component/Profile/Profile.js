@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import React, { useState } from "react";
 import {
   TextField,
@@ -8,6 +6,9 @@ import {
   Grid,
   Typography,
   Paper,
+  Card,
+  CardContent,
+  CardActions,
   IconButton,
   Divider,
 } from "@mui/material";
@@ -15,7 +16,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 
-function Profile() {
+const Profile = () => {
   const initialUser = {
     id: "9f3e06da-a890-4980-b4cc-d9e816f84c97",
     firstName: "Admin",
@@ -179,87 +180,90 @@ function Profile() {
       </Typography>
 
       {user.addresses.map((address, index) => (
-        <Box key={index} sx={{ mb: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Країна"
-                fullWidth
-                value={address.country}
-                onChange={(e) =>
-                  handleAddressChange(index, "country", e.target.value)
-                }
-                variant="outlined"
-              />
+        <Card key={index} sx={{ mb: 2 }}>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Країна"
+                  fullWidth
+                  value={address.country}
+                  onChange={(e) =>
+                    handleAddressChange(index, "country", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Місто"
+                  fullWidth
+                  value={address.city}
+                  onChange={(e) =>
+                    handleAddressChange(index, "city", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Вулиця"
+                  fullWidth
+                  value={address.street}
+                  onChange={(e) =>
+                    handleAddressChange(index, "street", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  label="Будинок"
+                  fullWidth
+                  value={address.building}
+                  onChange={(e) =>
+                    handleAddressChange(index, "building", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  label="Квартира"
+                  fullWidth
+                  value={address.apartment}
+                  onChange={(e) =>
+                    handleAddressChange(index, "apartment", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Поштовий індекс"
+                  fullWidth
+                  value={address.postcode}
+                  onChange={(e) =>
+                    handleAddressChange(index, "postcode", e.target.value)
+                  }
+                  variant="outlined"
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Місто"
-                fullWidth
-                value={address.city}
-                onChange={(e) =>
-                  handleAddressChange(index, "city", e.target.value)
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                label="Вулиця"
-                fullWidth
-                value={address.street}
-                onChange={(e) =>
-                  handleAddressChange(index, "street", e.target.value)
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                label="Будинок"
-                fullWidth
-                value={address.building}
-                onChange={(e) =>
-                  handleAddressChange(index, "building", e.target.value)
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                label="Квартира"
-                fullWidth
-                value={address.apartment}
-                onChange={(e) =>
-                  handleAddressChange(index, "apartment", e.target.value)
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                label="Поштовий індекс"
-                fullWidth
-                value={address.postcode}
-                onChange={(e) =>
-                  handleAddressChange(index, "postcode", e.target.value)
-                }
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <IconButton
-                color="error"
-                onClick={() => handleRemoveAddress(index)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Box>
+          </CardContent>
+          <CardActions>
+            <Button
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => handleRemoveAddress(index)}
+            >
+              Видалити
+            </Button>
+          </CardActions>
+        </Card>
       ))}
 
-      <Box>
+      <Box sx={{ mt: 2 }}>
         <Button
           variant="outlined"
           startIcon={<AddCircleOutlineIcon />}
@@ -283,6 +287,6 @@ function Profile() {
       </Box>
     </Paper>
   );
-}
+};
 
 export default Profile;
