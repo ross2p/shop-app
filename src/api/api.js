@@ -19,6 +19,8 @@ export const API_URLS = {
   addComment: "/comment",
 
   address: "/addresses",
+
+  category: "/category",
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {

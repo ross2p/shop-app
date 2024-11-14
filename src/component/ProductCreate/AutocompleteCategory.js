@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -15,31 +15,31 @@ import {
   IconButton,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { featchAllCategory, featchCreateCategory } from "../../api/categoryApi";
 
 const AutocompleteCategory = ({ product, handleChange }) => {
-  //   const [product, setProduct] = useState({
-  //     name: "",
-  //     description: "",
-  //     barcode: "",
-  //     price: 0,
-  //     rating: 0,
-  //     categoryId: "",
-  //   });
   const [newCategoryName, setNewCategoryName] = useState("");
 
   const [categories, setCategories] = useState([]);
   const [openNewCategoryDialog, setOpenNewCategoryDialog] = useState(false);
 
+  const loadCategory = async () => {
+    const categories = await featchAllCategory();
+    setCategories(categories);
+  };
+  useEffect(() => {
+    loadCategory();
+  }, []);
+
   const handleNewCategoryDialog = () => {
     setOpenNewCategoryDialog(true);
   };
 
-  const handleNewCategorySubmit = () => {
-    const newCategory = {
-      id: crypto.randomUUID(),
-      name: newCategoryName,
-    };
-    setCategories((prev) => [...prev, newCategory]);
+  const handleNewCategorySubmit = async () => {
+    const newCategory = await featchCreateCategory({ name: newCategoryName });
+
+    loadCategory();
+
     handleChange("categoryId", newCategory.id);
     setOpenNewCategoryDialog(false);
     setNewCategoryName("");

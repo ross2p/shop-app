@@ -6,8 +6,10 @@ import { fetchProductCreate } from "../../api/productsApi";
 import ProductImage from "./ProductImage";
 import ProductData from "./ProductData";
 import Characteristic from "./Characteristic";
+import { useNavigate } from "react-router-dom";
 
 const ProductCreate = () => {
+  const navigator = useNavigate();
   const [product, setProduct] = useState({
     name: "test",
     description: "",
@@ -15,7 +17,7 @@ const ProductCreate = () => {
     price: 0,
     categoryId: "",
     characteristic: [{ key: "", value: "", errors: "" }],
-    imageFiles: [],
+    images: [],
   });
 
   const handleChange = (field, value) => {
@@ -23,32 +25,28 @@ const ProductCreate = () => {
   };
 
   const handleSave = async () => {
-    //map characteristic
     const characteristic = product.characteristic
-      .filter(
-        (item) => item.key !== "" && item.value !== "" && item.errors === ""
-      )
+      .filter((item) => item.key !== "" && item.value !== "")
       .reduce((acc, current) => {
-        acc[current.id] = current;
+        acc[current.key] = current.value;
         return acc;
       }, {});
 
     const formData = new FormData();
-    formData.append("name", product.name);
-    formData.append("description", product.description);
-    formData.append("barcode", product.barcode);
-    formData.append("price", product.price);
-    formData.append("categoryId", product.categoryId);
-    formData.append("characteristic", characteristic);
+    formData.append(
+      "product",
+      new Blob([JSON.stringify({ ...product, characteristic })], {
+        type: "application/json",
+      })
+    );
 
-    product.imageFiles.forEach((file) => {
+    product.images.forEach((file) => {
       formData.append("images", file);
     });
 
-    await fetchProductCreate(formData);
-    console.log("Product saved successfully with images!");
+    const newProduct = await fetchProductCreate(formData);
+    navigator(`/product/${newProduct.id}`);
   };
-
   return (
     <Paper
       sx={{

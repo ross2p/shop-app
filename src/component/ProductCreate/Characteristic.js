@@ -10,13 +10,6 @@ import {
   TableBody,
 } from "@mui/material";
 const Characteristic = ({ product, handleChange }) => {
-  const [characteristic, setCharacteristic] = useState([
-    { key: "Brand", value: "Coca-Cola", errors: "" },
-    { key: "Country", value: "Ukraine", errors: "" },
-    { key: "View", value: "Strong carbonated", errors: "" },
-    { key: "Weight", value: "1 kg", errors: "" },
-  ]);
-
   const handleCharacteristicChange = (key, value, index) => {
     let characteristicCopy = Array.isArray(product.characteristic)
       ? [...product.characteristic]
@@ -31,6 +24,8 @@ const Characteristic = ({ product, handleChange }) => {
         characteristicCopy.push({ key: "", value: "" });
       }
     }
+    // validateCharacteristic(characteristicCopy);
+    console.log(product.characteristic);
     handleChange("characteristic", characteristicCopy);
   };
 
@@ -48,7 +43,7 @@ const Characteristic = ({ product, handleChange }) => {
       } else {
         characteristic[i].error = "";
       }
-      console.log("characteristic.error", characteristic[i].error);
+      //   console.log("characteristic.error", characteristic[i].error);
     }
 
     // return characteristic;
