@@ -5,34 +5,35 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Carousel from "react-material-ui-carousel";
 
 const ProductImage = ({ product, handleChange }) => {
-  const [previewImages, setPreviewImages] = useState([]);
+  // const [previewImages, setPreviewImages] = useState([]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const updatedImages = [...(product.images || []), ...files];
+    console.log(updatedImages);
     handleChange("images", updatedImages);
 
     const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages((prev) => [...prev, ...previews]);
+    const previewsImages = [...(product.previewImages || []), ...previews];
+
+    handleChange("previewImages", previewsImages);
   };
 
   const handleDeleteImage = (index) => {
     const updatedImages = product.images.filter((_, i) => i !== index);
     handleChange("images", updatedImages);
 
-    setPreviewImages((prev) => {
-      URL.revokeObjectURL(prev[index]);
-      return prev.filter((_, i) => i !== index);
-    });
+    const previewImages = product.previewImages.filter((_, i) => i !== index);
+    handleChange("previewImages", previewImages);
   };
 
   return (
     <>
-      {previewImages.length > 0 && (
+      {product.previewImages.length > 0 && (
         <Grid item xs={12}>
           <Box sx={{ flex: 1 }}>
             <Carousel>
-              {previewImages.map((img, index) => (
+              {product.previewImages.map((img, index) => (
                 <Box key={index} sx={{ position: "relative" }}>
                   <CardMedia
                     component="img"
