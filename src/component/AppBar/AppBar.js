@@ -102,10 +102,27 @@ function ResponsiveAppBar({ children }) {
       if (user.role.name == "ADMIN") {
         setNavigation(NAVIGATION_ADMIN);
       } else {
+        const data = await featchCreateOrder();
+        console.log(data);
+        const cart = NAVIGATION_USER.find((item) => item.title === `Cart`);
+        console.log(1);
+        cart.segment = `order-items/${data.id}`;
         setNavigation(NAVIGATION_USER);
       }
     };
     loadDate();
+  }, []);
+
+  React.useEffect(() => {
+    async function updateNavigation() {
+      try {
+        setNavigation((prev) => [...prev]);
+      } catch (error) {
+        console.error("Failed to fetch segment value", error);
+      }
+    }
+
+    updateNavigation();
   }, []);
 
   React.useEffect(() => {
