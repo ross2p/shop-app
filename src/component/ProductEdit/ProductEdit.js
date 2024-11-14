@@ -270,58 +270,6 @@ const ProductEdit = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            Характеристики
-          </Typography>
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Ключ</TableCell>
-                <TableCell>Значення</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {characteristic.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <TextField
-                      fullWidth
-                      value={item.key}
-                      onChange={(e) =>
-                        handleCharacteristicChange(
-                          e.target.value,
-                          item.value,
-                          index
-                        )
-                      }
-                      variant="outlined"
-                      error={!!item.errors}
-                      helperText={item.errors}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      fullWidth
-                      value={item.value}
-                      onChange={(e) =>
-                        handleCharacteristicChange(
-                          item.key,
-                          e.target.value,
-                          index
-                        )
-                      }
-                      variant="outlined"
-                      error={!!item.errors}
-                      helperText={item.errors}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Grid>
-
         <Grid item xs={12} sx={{ textAlign: "center" }}>
           <Button
             variant="contained"
