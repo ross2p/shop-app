@@ -34,14 +34,14 @@ const ProductCreate = () => {
 
     const formData = new FormData();
     formData.append(
-      "product",
+      "body",
       new Blob([JSON.stringify({ ...product, characteristic })], {
         type: "application/json",
       })
     );
 
     product.images.forEach((file) => {
-      formData.append("images", file);
+      formData.append("files", file);
     });
 
     const newProduct = await fetchProductCreate(formData);

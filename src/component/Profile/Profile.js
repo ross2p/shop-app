@@ -134,7 +134,7 @@ const Profile = () => {
             label="Email"
             fullWidth
             value={user.email}
-            onChange={(e) => handleChange("email", e.target.value)}
+            // onChange={(e) => handleChange("email", e.target.value)}
             variant="outlined"
           />
         </Grid>
