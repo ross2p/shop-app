@@ -9,13 +9,12 @@ import ProductEditCreate from "./ProductEditCreate";
 const ProductCreate = () => {
   const navigator = useNavigate();
   const [product, setProduct] = useState({
-    name: "test",
-    description:
-      "Potato flakes (60%), starch, rapeseed oil, seasoning Taste of chanterelles in sour cream (maltodextrin, flavorings (contains milk), table salt, rice flour, gelling agent (calcium chloride), sugar, white pepper, acidity regulator (calcium lactate), coloring agent (paprika extract)), sugar, emulsifiers (lecithin, mono- and diglycerides of fatty acids), dextrose, acidity regulator (citric acid).",
-    barcode: "48123231252",
-    price: 80.0,
-    categoryId: "70536671-390a-4610-a305-b215da6f9530",
-    characteristic: [{ key: "Calories", value: "441.00kcal", errors: "" }],
+    name: "",
+    description: "",
+    barcode: "",
+    price: 0,
+    categoryId: "",
+    characteristic: [{ key: "", value: "", errors: "" }],
     images: [],
   });
 
@@ -33,7 +32,7 @@ const ProductCreate = () => {
 
     const newProduct = await fetchProductCreate(data);
     console.log(newProduct);
-    // navigator(`/product/${newProduct.id}`);
+    navigator(`/product/${newProduct.id}`);
   };
   return (
     <ProductEditCreate

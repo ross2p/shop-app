@@ -26,7 +26,12 @@ export const API_URLS = {
   imageById: (imageId) => `/images/${imageId}`,
 };
 
-export const apiRequest = async (url, method = "GET", body = null) => {
+export const apiRequest = async (
+  url,
+  method = "GET",
+  body = null,
+  param = null
+) => {
   const token = localStorage.getItem("token");
   const options = {
     method,
@@ -45,10 +50,14 @@ export const apiRequest = async (url, method = "GET", body = null) => {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
-    console.log(API_BASE_URL + url);
-    const result = await response.json();
-    console.log(result);
-    return result;
+    console.log(response.url);
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const result = await response.json();
+      return result;
+    }
+
+    return true;
   } catch (error) {
     console.error("API request failed:", {
       error,

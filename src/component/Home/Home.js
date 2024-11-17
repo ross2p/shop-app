@@ -1,40 +1,59 @@
 import * as React from "react";
+import { Container, Box, Grid, Pagination } from "@mui/material";
 import { Search } from "./Search";
-import { Container, CssBaseline, Paper, styled } from "@mui/material";
 import ProductCard from "./ProductCard";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { featchProducts } from "../../api/productsApi";
+import { fetchProducts } from "../../api/productsApi";
+
 export function Home() {
-  const [error, setError] = React.useState(null);
   const [products, setProducts] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [sortBy, setSortBy] = React.useState("name");
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   React.useEffect(() => {
-    const loadDecks = async () => {
-      try {
-        const data = await featchProducts();
-        setProducts(data.content);
-      } catch (err) {
-        setError("Failed to load products");
-      }
-    };
     loadDecks();
-  }, []);
+  }, [page, sortBy]);
+
+  const loadDecks = async () => {
+    try {
+      const data = await fetchProducts({
+        page,
+        pageSize: 10,
+        sortBy,
+        search: searchQuery,
+      });
+      setProducts(data.content);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      console.error("Failed to load products", err);
+    }
+  };
 
   return (
     <Container maxWidth="xl">
-      <Box sx={{ flexGrow: 1, marginTop: 5 }}>
+      <Box sx={{ marginTop: 5 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Search />
-          </Grid>
-
-          <Grid item xs={0} sm={4}></Grid>
-          {products?.map((product) => (
+          <Search
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearch={loadDecks}
+          />
+          {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={12} md={4} lg={3}>
               <ProductCard product={product} />
             </Grid>
           ))}
+          <Grid item xs={12}>
+            <Pagination
+              count={totalPages}
+              page={page + 1}
+              onChange={(e, value) => setPage(value - 1)}
+              color="primary"
+            />
+          </Grid>
         </Grid>
       </Box>
     </Container>

@@ -31,7 +31,7 @@ function App() {
             <Route path={AppRoutes.OrderList} element={<OrderList />} />
             <Route path="/order-trecking/:id" element={<OrderTracking />} />
             <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/product-edit/:id" element={<ProductCreate />} />
+            <Route path="/product-edit/:id" element={<ProductEdit />} />
             <Route path="/order" element={<Orders />} />
             <Route path="/product-create" element={<ProductCreate />} />
           </Routes>

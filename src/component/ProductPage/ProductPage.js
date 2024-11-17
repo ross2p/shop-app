@@ -218,7 +218,7 @@ function ProductPage() {
                 <CardMedia
                   component="img"
                   height="300"
-                  image={`data:image/jpeg;base64,${img}`}
+                  image={`data:image/jpeg;base64,${img.data}`}
                   alt={productData.name}
                   key={index}
                   sx={{

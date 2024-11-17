@@ -23,7 +23,7 @@ export default function ProductCard({ product }) {
         }}
         image={
           product.images?.[0]
-            ? `data:image/jpeg;base64,${product.images[0]}`
+            ? `data:image/jpeg;base64,${product.images[0].data}`
             : ""
         }
         title={product.name}

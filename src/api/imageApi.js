@@ -27,3 +27,7 @@ export const fetchCreateImage = async (formData) => {
     throw error; // перекидаємо помилку, щоб її можна було обробити у компоненті
   }
 };
+
+export const fetchDeleteImage = async (imageId, data) => {
+  return apiRequest(API_URLS.imageById(imageId), "DELETE", data);
+};

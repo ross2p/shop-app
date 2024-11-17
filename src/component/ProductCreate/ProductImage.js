@@ -3,7 +3,7 @@ import { Button, Box, Grid, CardMedia, IconButton } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Carousel from "react-material-ui-carousel";
-import { fetchCreateImage } from "../../api/imageApi";
+import { fetchCreateImage, fetchDeleteImage } from "../../api/imageApi";
 
 const ProductImage = ({ product, handleChange }) => {
   const handleUploadImage = async (e) => {
@@ -26,8 +26,8 @@ const ProductImage = ({ product, handleChange }) => {
     console.log("product.images", product.images);
   };
 
-  const handleDeleteImage = (index) => {
-    //todo: delete image from server
+  const handleDeleteImage = async (index) => {
+    await fetchDeleteImage(product.images[index].id);
     const updatedImages = product.images.filter((_, i) => i !== index);
     handleChange("images", updatedImages);
   };
@@ -58,7 +58,7 @@ const ProductImage = ({ product, handleChange }) => {
                       backgroundColor: "rgba(255, 255, 255, 0.7)",
                     }}
                     // onClick={() => handleDeleteImage(index)}
-                    onClick={() => console.log(product.images)}
+                    onClick={() => handleDeleteImage(index)}
                   >
                     <DeleteIcon color="error" />
                   </IconButton>

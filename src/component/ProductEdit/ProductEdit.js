@@ -49,20 +49,14 @@ const ProductEdit = () => {
         acc[current.key] = current.value;
         return acc;
       }, {});
+    const images = product.images.map((img) => img.id);
 
-    const formData = new FormData();
-    formData.append(
-      "body",
-      new Blob([JSON.stringify({ ...product, characteristic })], {
-        type: "application/json",
-      })
-    );
+    const data = { ...product, characteristic, images };
+    console.log(JSON.stringify(data));
 
-    product.images.forEach((file) => {
-      formData.append("files", file);
-    });
-    const updateProduct = await fetchUpdateProduct(productId, formData);
-    navigator(`/product/${updateProduct.id}`);
+    const updatedProduct = await fetchUpdateProduct(productId, data);
+    console.log(updatedProduct);
+    navigator(`/product/${updatedProduct.id}`);
   };
   return (
     <ProductEditCreate
