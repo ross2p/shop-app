@@ -3,42 +3,47 @@ import { Button, Box, Grid, CardMedia, IconButton } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Carousel from "react-material-ui-carousel";
+import { fetchCreateImage } from "../../api/imageApi";
 
 const ProductImage = ({ product, handleChange }) => {
-  // const [previewImages, setPreviewImages] = useState([]);
-
-  const handleFileChange = (e) => {
+  const handleUploadImage = async (e) => {
     const files = Array.from(e.target.files);
-    const updatedImages = [...(product.images || []), ...files];
-    console.log(updatedImages);
-    handleChange("images", updatedImages);
 
-    const previews = files.map((file) => URL.createObjectURL(file));
-    const previewsImages = [...(product.previewImages || []), ...previews];
+    if (files.length === 0) {
+      console.error("No files selected");
+      return;
+    }
+    const newImages = [];
+    for (const file of files) {
+      const formData = new FormData();
 
-    handleChange("previewImages", previewsImages);
+      formData.append("file", file);
+      const result = await fetchCreateImage(formData);
+      newImages.push(result);
+    }
+    await handleChange("images", [...product.images, ...newImages]);
+
+    console.log("product.images", product.images);
   };
 
   const handleDeleteImage = (index) => {
+    //todo: delete image from server
     const updatedImages = product.images.filter((_, i) => i !== index);
     handleChange("images", updatedImages);
-
-    const previewImages = product.previewImages.filter((_, i) => i !== index);
-    handleChange("previewImages", previewImages);
   };
 
   return (
     <>
-      {product.previewImages.length > 0 && (
+      {product.images.length > 0 && (
         <Grid item xs={12}>
           <Box sx={{ flex: 1 }}>
             <Carousel>
-              {product.previewImages.map((img, index) => (
+              {product.images.map((img, index) => (
                 <Box key={index} sx={{ position: "relative" }}>
                   <CardMedia
                     component="img"
                     height="300"
-                    image={img}
+                    image={`data:image/jpeg;base64,${img.data}`}
                     alt={`Preview ${index + 1}`}
                     sx={{
                       objectFit: "contain",
@@ -52,7 +57,8 @@ const ProductImage = ({ product, handleChange }) => {
                       right: 60,
                       backgroundColor: "rgba(255, 255, 255, 0.7)",
                     }}
-                    onClick={() => handleDeleteImage(index)}
+                    // onClick={() => handleDeleteImage(index)}
+                    onClick={() => console.log(product.images)}
                   >
                     <DeleteIcon color="error" />
                   </IconButton>
@@ -70,7 +76,7 @@ const ProductImage = ({ product, handleChange }) => {
           fullWidth
         >
           Upload Photos
-          <input type="file" hidden multiple onChange={handleFileChange} />
+          <input type="file" hidden multiple onChange={handleUploadImage} />
         </Button>
       </Grid>
     </>

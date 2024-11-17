@@ -14,21 +14,6 @@ export const fetchUpdateProduct = async (productId, data) => {
   return apiRequest(API_URLS.productById(productId), "PUT", data);
 };
 
-export const fetchProductCreate = async (formData) => {
-  try {
-    const response = await fetch("http://localhost:8080/api/products", {
-      method: "POST",
-      body: formData, // передаємо FormData, яка містить дані продукту та файли
-    });
-
-    if (!response.ok) {
-      throw new Error("Не вдалося створити продукт. Спробуйте ще раз.");
-    }
-
-    const createdProduct = await response.json();
-    return createdProduct;
-  } catch (error) {
-    console.error("Помилка при створенні продукту:", error);
-    throw error; // перекидаємо помилку, щоб її можна було обробити у компоненті
-  }
+export const fetchProductCreate = async (data) => {
+  return apiRequest(API_URLS.products, "POST", data);
 };

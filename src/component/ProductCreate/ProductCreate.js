@@ -10,12 +10,12 @@ const ProductCreate = () => {
   const navigator = useNavigate();
   const [product, setProduct] = useState({
     name: "test",
-    description: "",
-    barcode: "",
-    price: 0,
-    categoryId: "",
-    characteristic: [{ key: "", value: "", errors: "" }],
-    previewImages: [],
+    description:
+      "Potato flakes (60%), starch, rapeseed oil, seasoning Taste of chanterelles in sour cream (maltodextrin, flavorings (contains milk), table salt, rice flour, gelling agent (calcium chloride), sugar, white pepper, acidity regulator (calcium lactate), coloring agent (paprika extract)), sugar, emulsifiers (lecithin, mono- and diglycerides of fatty acids), dextrose, acidity regulator (citric acid).",
+    barcode: "48123231252",
+    price: 80.0,
+    categoryId: "70536671-390a-4610-a305-b215da6f9530",
+    characteristic: [{ key: "Calories", value: "441.00kcal", errors: "" }],
     images: [],
   });
 
@@ -26,20 +26,12 @@ const ProductCreate = () => {
         acc[current.key] = current.value;
         return acc;
       }, {});
+    const images = product.images.map((img) => img.id);
 
-    const formData = new FormData();
-    formData.append(
-      "body",
-      new Blob([JSON.stringify({ ...product, characteristic })], {
-        type: "application/json",
-      })
-    );
+    const data = { ...product, characteristic, images };
+    console.log(JSON.stringify(data));
 
-    product.images.forEach((file) => {
-      formData.append("files", file);
-    });
-
-    const newProduct = await fetchProductCreate(formData);
+    const newProduct = await fetchProductCreate(data);
     console.log(newProduct);
     // navigator(`/product/${newProduct.id}`);
   };

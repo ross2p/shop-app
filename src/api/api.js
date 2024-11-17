@@ -21,6 +21,9 @@ export const API_URLS = {
   address: "/addresses",
 
   category: "/category",
+
+  images: "/images",
+  imageById: (imageId) => `/images/${imageId}`,
 };
 
 export const apiRequest = async (url, method = "GET", body = null) => {
