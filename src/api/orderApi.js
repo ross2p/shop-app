@@ -10,7 +10,10 @@ export const fetchOrders = async () => {
 };
 
 export const fetchAddProduct = async (productId, quantity) => {
-  return apiRequest(API_URLS.addProduct, "POST", { productId, quantity });
+  return apiRequest(API_URLS.addProduct, "POST", {
+    productId,
+    quantity,
+  });
 };
 
 export const featchCreateOrder = async () => {
@@ -18,6 +21,7 @@ export const featchCreateOrder = async () => {
 };
 
 export const fetchUpdateOrderItem = async (orderItemId, data) => {
+  console.log("data", data);
   return apiRequest(API_URLS.orderItemsById(orderItemId), "PUT", data);
 };
 

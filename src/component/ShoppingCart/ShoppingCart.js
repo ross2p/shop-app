@@ -104,18 +104,22 @@ export default function ShoppingCart() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    async function loadData() {
-      try {
-        const orders = await fetchOrderItems(orderId);
-        setCartItems(orders.content);
-        const fetchedAddresses = await fetchAddresses(); // Fetching addresses
-        setAddresses(fetchedAddresses.content); // Assumes `content` is the list of addresses
-      } catch (error) {
-        console.error("Failed to load order data", error);
-      }
-    }
     loadData();
   }, [orderId]);
+
+  async function loadData() {
+    try {
+      const [orders, fetchedAddresses] = await Promise.all([
+        fetchOrderItems(orderId),
+        fetchAddresses(),
+      ]);
+
+      setCartItems(orders.content);
+      setAddresses(fetchedAddresses.content);
+    } catch (error) {
+      console.error("Failed to load order data", error);
+    }
+  }
 
   const handleRemove = async (id) => {
     await fetchDeleteOrderItem(id);
@@ -144,7 +148,11 @@ export default function ShoppingCart() {
         .filter((item) => item.quantity > 0)
     );
     if (updatedItem) {
-      await fetchUpdateOrderItem(id, updatedItem);
+      await fetchUpdateOrderItem(id, {
+        productId: updatedItem.product.id,
+        quantity: updatedItem.quantity,
+      });
+      await loadData();
     }
   };
 
@@ -162,7 +170,7 @@ export default function ShoppingCart() {
         status: "DELIVERY",
         addressId: selectedAddress,
       });
-      navigate("/"); // Redirect to the home page after update
+      navigate("/");
     }
   };
 
