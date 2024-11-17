@@ -43,7 +43,7 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
             alt={item.product.name}
             src={
               item.product?.images?.[0]
-                ? `data:image/jpeg;base64,${item.product.images[0]}`
+                ? `data:image/jpeg;base64,${item.product.images[0].data}`
                 : ""
             }
           />

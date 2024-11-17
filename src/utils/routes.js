@@ -3,6 +3,6 @@ export const AppRoutes = {
   SignIn: "sign-in",
   SignUp: "sign-up",
   Profile: "profile",
-  ShoppingCart: "order-items",
+  ShoppingCart: "order-items/:id",
   OrderList: "order-list/:id",
 };
