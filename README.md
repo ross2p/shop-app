@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# Shop App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Description
 
-## Available Scripts
+**Shop App** is the frontend for an online store where users can browse products, add them to their cart, and place orders. Administrators can log in to a dedicated panel to manage product listings. This app seamlessly integrates with the **Shop API** backend.
 
-In the project directory, you can run:
+## Key Features
 
-### `npm start`
+- **User Features**:
+  - Browse products with categories and filters
+  - Add items to the cart
+  - Place orders
+  - User authentication and profile management
+- **Admin Features**:
+  - Product management: create, edit, or delete items
+  - Access to dashboard analytics (planned)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Technologies
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This project uses:
 
-### `npm test`
+- **React**: version 18.3.1
+- **Material-UI (MUI)**: for a responsive and modern UI
+- **React Spring**: for animations
+- **React Router**: for navigation
+- **React JWT**: for token-based authentication
+- **React Slick**: for carousels
+- **Slick Carousel**: as a supporting library
+- **dotenv**: for environment variable management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## System Requirements
 
-### `npm run build`
+- Node.js >= 16.0
+- NPM or Yarn package manager
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository:
+   ```bash
+   git clone <repository_URL>
+   cd shop-app
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables: Create a .env file in the project root:
+   ```
+   REACT_APP_API_URL=http://localhost:8080
+   ```
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Scripts
 
-### `npm run eject`
+- `npm start`: Start the development server
+- `npm run build`: Build the app for production
+- `npm test`: Run tests
+- `npm run eject`: Eject from Create React App
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Future Plans
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Implement dashboard analytics for administrators
+- Add product reviews and ratings
+- Enable payment integration
+- Improve accessibility and responsive design
