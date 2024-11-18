@@ -21,6 +21,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   fetchOrderItems,
+  fetchOrderById,
   fetchUpdateOrder,
   fetchUpdateOrderItem,
   fetchDeleteOrderItem,
@@ -98,6 +99,7 @@ const CartItem = ({ item, onRemove, onAdd, onSubtract, onToggleSelect }) => (
 export default function ShoppingCart() {
   const { id: orderId } = useParams();
   const [cartItems, setCartItems] = React.useState([]);
+  const [order, setOrder] = React.useState({});
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedAddress, setSelectedAddress] = React.useState(null);
   const [addresses, setAddresses] = React.useState([]);
@@ -109,12 +111,13 @@ export default function ShoppingCart() {
 
   async function loadData() {
     try {
-      const [orders, fetchedAddresses] = await Promise.all([
+      const [orderItems, order, fetchedAddresses] = await Promise.all([
         fetchOrderItems(orderId),
+        fetchOrderById(orderId),
         fetchAddresses(),
       ]);
-
-      setCartItems(orders.content);
+      setOrder(order);
+      setCartItems(orderItems.content);
       setAddresses(fetchedAddresses.content);
     } catch (error) {
       console.error("Failed to load order data", error);
@@ -174,10 +177,6 @@ export default function ShoppingCart() {
     }
   };
 
-  const totalPrice = cartItems
-    .filter((item) => item.selected)
-    .reduce((acc, item) => acc + item.price * item.quantity, 0);
-
   return (
     <Box sx={{ mt: 4, p: 2 }}>
       <Typography variant="h4" gutterBottom>
@@ -200,7 +199,7 @@ export default function ShoppingCart() {
         alignItems="center"
         sx={{ mb: 2 }}
       >
-        <Typography variant="h6">Total: ${totalPrice.toFixed(2)}</Typography>
+        <Typography variant="h6">Total: ${order.totalAmount}</Typography>
         <Button
           variant="contained"
           color="primary"

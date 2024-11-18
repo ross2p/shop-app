@@ -13,6 +13,10 @@ import { a } from "@react-spring/web";
 import { fetchUser, fetchSignOut } from "../../api/authApi";
 import App from "../../App";
 import { featchCreateOrder } from "../../api/orderApi";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HistoryIcon from "@mui/icons-material/History";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 let NAVIGATION = [
   {
@@ -23,7 +27,7 @@ let NAVIGATION = [
   {
     segment: AppRoutes.Profile,
     title: "Profile",
-    icon: <DashboardIcon />,
+    icon: <AccountCircleIcon />,
   },
 ];
 let NAVIGATION_USER = [
@@ -31,12 +35,12 @@ let NAVIGATION_USER = [
   {
     segment: AppRoutes.OrderList,
     title: "History",
-    icon: <DashboardIcon />,
+    icon: <HistoryIcon />,
   },
   {
     segment: `order-items`,
     title: "Cart",
-    icon: <DashboardIcon />,
+    icon: <ShoppingCartIcon />,
   },
 ];
 
@@ -44,8 +48,13 @@ const NAVIGATION_ADMIN = [
   ...NAVIGATION,
   {
     segment: `order`,
-    title: "Orers",
+    title: "Orders",
     icon: <DashboardIcon />,
+  },
+  {
+    segment: `product-create`,
+    title: "Add product",
+    icon: <AddCircleOutlineIcon />,
   },
 ];
 const demoTheme = createTheme({

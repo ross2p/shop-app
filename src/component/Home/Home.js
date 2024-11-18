@@ -18,8 +18,8 @@ export function Home() {
   const loadDecks = async () => {
     try {
       const data = await fetchProducts({
-        page,
-        pageSize: 10,
+        offset: page,
+        pageSize: 8,
         sortBy,
         search: searchQuery,
       });
