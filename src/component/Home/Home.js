@@ -47,12 +47,14 @@ export function Home() {
             </Grid>
           ))}
           <Grid item xs={12}>
-            <Pagination
-              count={totalPages}
-              page={page + 1}
-              onChange={(e, value) => setPage(value - 1)}
-              color="primary"
-            />
+            <Box display="flex" justifyContent="center">
+              <Pagination
+                count={totalPages}
+                page={page + 1}
+                onChange={(e, value) => setPage(value - 1)}
+                color="primary"
+              />
+            </Box>
           </Grid>
         </Grid>
       </Box>
