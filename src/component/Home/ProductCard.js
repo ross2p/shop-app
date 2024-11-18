@@ -1,21 +1,52 @@
-import * as React from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Badge } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { Star, StarBorder } from "@mui/icons-material";
 import { fetchAddProduct } from "../../api/orderApi";
 
 export default function ProductCard({ product }) {
+  const calculateDiscount = (originalPrice, discountedPrice) => {
+    const discount = ((originalPrice - discountedPrice) / originalPrice) * 100;
+    return Math.round(discount);
+  };
+
   async function handleAddToCart(productId) {
     await fetchAddProduct(productId, 1);
   }
+
   return (
-    <Card sx={{ maxWidth: 345, mx: "auto", mt: 4, boxShadow: 3 }}>
+    <Card
+      sx={{
+        maxWidth: 345,
+        mx: "auto",
+        mt: 4,
+        boxShadow: 3,
+        position: "relative",
+      }}
+    >
+      {product.promotion && (
+        <Badge
+          sx={{
+            position: "absolute",
+            top: 16,
+            left: 16,
+            backgroundColor: "error.main",
+            color: "white",
+            padding: "4px 8px",
+            borderRadius: "8px",
+            fontSize: "0.75rem",
+          }}
+        >
+          {product.promotion.name}
+        </Badge>
+      )}
+
       <CardMedia
         sx={{
           height: 240,

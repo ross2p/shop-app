@@ -18,6 +18,7 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  Badge,
 } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import PersonIcon from "@mui/icons-material/Person";
@@ -213,6 +214,21 @@ function ProductPage() {
           }}
         >
           <Box sx={{ flex: 1 }}>
+            {productData.promotion && (
+              <Badge
+                sx={{
+                  top: 16,
+                  left: 16,
+                  backgroundColor: "error.main",
+                  color: "white",
+                  padding: "4px 8px",
+                  borderRadius: "8px",
+                  fontSize: "0.75rem",
+                }}
+              >
+                {productData.promotion.name}
+              </Badge>
+            )}
             <Carousel>
               {productData.images?.map((img, index) => (
                 <CardMedia
