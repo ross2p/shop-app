@@ -9,9 +9,11 @@ import Characteristic from "./Characteristic";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { fetchProductById } from "../../api/productsApi";
+import Promotion from "./Promotion";
 
 const ProductEditCreate = ({ name, product, setProduct, handleOperator }) => {
   const handleChange = (field, value) => {
+    console.log(product);
     setProduct((prev) => ({ ...prev, [field]: value }));
   };
   return (
@@ -33,6 +35,7 @@ const ProductEditCreate = ({ name, product, setProduct, handleOperator }) => {
         <ProductImage handleChange={handleChange} product={product} />
         <ProductData handleChange={handleChange} product={product} />
         <Characteristic handleChange={handleChange} product={product} />
+        <Promotion handleChange={handleChange} product={product} />
 
         <Grid item xs={12} sx={{ textAlign: "center" }}>
           <Button
@@ -41,7 +44,7 @@ const ProductEditCreate = ({ name, product, setProduct, handleOperator }) => {
             onClick={handleOperator}
             sx={{ mt: 2, px: 4, py: 1 }}
           >
-            Зберегти
+            Save
           </Button>
         </Grid>
       </Grid>

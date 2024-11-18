@@ -24,6 +24,8 @@ export const API_URLS = {
 
   images: "/images",
   imageById: (imageId) => `/images/${imageId}`,
+
+  promotion: "/promotions",
 };
 
 export const apiRequest = async (
